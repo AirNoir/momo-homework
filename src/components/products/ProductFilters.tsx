@@ -44,7 +44,7 @@ export default function ProductFilters({
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value)}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="min-w-[110px] block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="createdAt">建立時間</option>
             <option value="updatedAt">更新時間</option>
@@ -61,8 +61,8 @@ export default function ProductFilters({
             }
             className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
-            <option value="desc">降序</option>
-            <option value="asc">升序</option>
+            <option value="desc">遞減</option>
+            <option value="asc">遞增</option>
           </select>
         </div>
       </div>

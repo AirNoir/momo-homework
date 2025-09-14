@@ -1,11 +1,11 @@
 import { Product, PaginatedResponse } from "@/types";
 
-// 全局商品数据存储，确保数据一致性
+// 全域商品資料儲存，確保資料一致性
 let globalProducts: Product[] | null = null;
 
 // 生成隨機商品資料
 export const generateMockProducts = (): Product[] => {
-  // 如果已经生成过数据，直接返回
+  // 如果已經生成過資料，直接返回
   if (globalProducts) {
     return globalProducts;
   }
@@ -87,7 +87,7 @@ export const generateMockProducts = (): Product[] => {
     });
   }
 
-  // 存储生成的数据到全局变量
+  // 儲存生成的資料到全域變數
   globalProducts = products;
   return products;
 };
@@ -106,25 +106,33 @@ export const mockProductsApi = async (
 
   const allProducts = generateMockProducts();
 
-  // 排序
-  if (sortBy) {
-    allProducts.sort((a, b) => {
-      const aValue = a[sortBy as keyof Product];
-      const bValue = b[sortBy as keyof Product];
+  // 排序 - 如果沒有指定排序，默認按建立時間降序排列
+  const actualSortBy = sortBy || "createdAt";
+  allProducts.sort((a, b) => {
+    const aValue = a[actualSortBy as keyof Product];
+    const bValue = b[actualSortBy as keyof Product];
 
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-      }
+    // 處理日期類型
+    if (aValue instanceof Date && bValue instanceof Date) {
+      return sortOrder === "asc"
+        ? aValue.getTime() - bValue.getTime()
+        : bValue.getTime() - aValue.getTime();
+    }
 
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortOrder === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
+    // 處理數字類型
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+    }
 
-      return 0;
-    });
-  }
+    // 處理字符串類型
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
+    }
+
+    return 0;
+  });
 
   const total = allProducts.length;
   const totalPages = Math.ceil(total / limit);
@@ -205,7 +213,7 @@ export const mockUpdateProductApi = async (
     return null;
   }
 
-  // 更新产品数据
+  // 更新商品資料
   const currentProduct = allProducts[productIndex];
   const newProduct = {
     ...currentProduct,
@@ -214,7 +222,7 @@ export const mockUpdateProductApi = async (
     updatedAt: new Date(), // 更新时间戳
   };
 
-  // 更新全局数据
+  // 更新全域資料
   if (globalProducts) {
     globalProducts[productIndex] = newProduct;
   }
@@ -239,7 +247,7 @@ export const mockCreateProductApi = async (
     updatedAt: now,
   };
 
-  // 添加到全局数据
+  // 新增到全域資料
   if (globalProducts) {
     globalProducts.push(newProduct);
   }

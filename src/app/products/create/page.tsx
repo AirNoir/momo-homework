@@ -174,7 +174,7 @@ export default function CreateProduct() {
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
             >
               <CheckIcon className="h-4 w-4 mr-2" />
-              {createProductMutation.isPending ? "創建中..." : "創建商品"}
+              {createProductMutation.isPending ? "新增中..." : "新增商品"}
             </button>
           </div>
         </div>

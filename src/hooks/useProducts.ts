@@ -9,6 +9,7 @@ import {
   mockProductApi,
   mockSearchProductsApi,
   mockUpdateProductApi,
+  mockCreateProductApi,
 } from "@/lib/mock-data";
 import { PaginationParams, Product } from "@/types";
 
@@ -79,17 +80,17 @@ export const useUpdateProduct = () => {
       mockUpdateProductApi(id, product),
     onSuccess: (updatedProduct, { id }) => {
       if (updatedProduct) {
-        // 更新单个商品的缓存
+        // 更新單一商品的快取
         queryClient.setQueryData(["product", id], updatedProduct);
 
-        // 使相关查询失效，触发重新获取
+        // 使相關查詢失效，觸發重新獲取
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["search-products"] });
         queryClient.invalidateQueries({ queryKey: ["infinite-products"] });
       }
     },
     onError: (error) => {
-      console.error("更新商品失败:", error);
+      console.error("更新商品失敗:", error);
     },
   });
 };
@@ -102,16 +103,16 @@ export const useCreateProduct = () => {
     mutationFn: (product: Omit<Product, "id" | "createdAt" | "updatedAt">) =>
       mockCreateProductApi(product),
     onSuccess: (newProduct) => {
-      // 添加新商品到缓存
+      // 新增商品到快取
       queryClient.setQueryData(["product", newProduct.id], newProduct);
 
-      // 使相关查询失效，触发重新获取
+      // 使相關查詢失效，觸發重新獲取
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["search-products"] });
       queryClient.invalidateQueries({ queryKey: ["infinite-products"] });
     },
     onError: (error) => {
-      console.error("創建商品失败:", error);
+      console.error("建立商品失敗:", error);
     },
   });
 };

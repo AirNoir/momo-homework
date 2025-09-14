@@ -125,22 +125,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                     </div>
                   </div>
                 </div>
-
-                {/* 編輯按鈕 */}
-                <div className="ml-4">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // 這裡可以添加編輯商品的邏輯
-                      console.log("編輯商品:", product.id);
-                    }}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200"
-                    title="編輯商品"
-                  >
-                    <PencilSquareIcon className="h-4 w-4 text-gray-600" />
-                  </button>
-                </div>
               </div>
             </div>
           </div>
