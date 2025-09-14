@@ -78,7 +78,7 @@ export interface SEOData {
   keywords: string[];
   canonicalUrl?: string;
   ogImage?: string;
-  structuredData?: Record<string, any>;
+  structuredData?: Record<string, unknown>;
 }
 
 // 表單相關類型定義
@@ -127,10 +127,10 @@ export interface MarketingBlock {
     | "html_block"
     | "carousel";
   title?: string;
-  content: any; // 可以是不同類型的內容
+  content: Record<string, unknown>; // 可以是不同類型的內容
   position: number;
   isVisible: boolean;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 // 商品頁面區塊類型定義

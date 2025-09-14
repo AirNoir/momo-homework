@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div>
@@ -12,7 +14,7 @@ export default function Home() {
               請選擇產品或行銷廣告進行管理
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
-              <a
+              <Link
                 href="/marketing"
                 className="group flex items-center gap-3 rounded-xl bg-purple-600 px-8 py-5 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-purple-700 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600 min-w-[280px] justify-center"
               >
@@ -43,8 +45,8 @@ export default function Home() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/products"
                 className="group flex items-center gap-3 rounded-xl bg-indigo-600 px-8 py-5 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-indigo-700 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-[280px] justify-center"
               >
@@ -75,7 +77,7 @@ export default function Home() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

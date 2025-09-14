@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
-import { MarketingPage, Product } from "@/types";
+import { MarketingPage, Product, MarketingBlock } from "@/types";
 import { mockMarketingPageApi } from "@/lib/marketing-mock-data";
 import { mockProductApi } from "@/lib/mock-data";
 
@@ -32,12 +32,12 @@ export default function MarketingPreviewPage() {
             )
             .flatMap((block) => {
               if (block.type === "product_recommendation") {
-                return block.content.products.map((productId: string) =>
-                  mockProductApi(productId)
+                return (block.content.products as string[]).map(
+                  (productId: string) => mockProductApi(productId)
                 );
               } else if (block.type === "flash_sale") {
-                return block.content.products.map((productId: string) =>
-                  mockProductApi(productId)
+                return (block.content.products as string[]).map(
+                  (productId: string) => mockProductApi(productId)
                 );
               }
               return [];
@@ -75,15 +75,15 @@ export default function MarketingPreviewPage() {
     </div>
   );
 
-  const renderBlock = (block: any) => {
+  const renderBlock = (block: MarketingBlock) => {
     switch (block.type) {
       case "banner":
         return (
           <div key={block.id} className="mb-8">
             <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
               <Image
-                src={block.content.image}
-                alt={block.content.alt || block.title}
+                src={block.content.image as string}
+                alt={(block.content.alt as string) || block.title || "Banner"}
                 fill
                 className="object-cover"
               />
@@ -93,7 +93,7 @@ export default function MarketingPreviewPage() {
 
       case "product_recommendation":
         const recommendationProducts = products.filter((product) =>
-          block.content.products.includes(product.id)
+          (block.content.products as string[])?.includes(product.id)
         );
         return (
           <div key={block.id} className="mb-8">
@@ -103,7 +103,7 @@ export default function MarketingPreviewPage() {
             <div className="overflow-x-auto">
               <div className="flex space-x-4 pb-4">
                 {recommendationProducts
-                  .slice(0, block.content.displayCount)
+                  .slice(0, (block.content.displayCount as number) || 4)
                   .map((product) => (
                     <SimpleProductCard key={product.id} product={product} />
                   ))}
@@ -114,7 +114,7 @@ export default function MarketingPreviewPage() {
 
       case "flash_sale":
         const flashSaleProducts = products.filter((product) =>
-          block.content.products.includes(product.id)
+          (block.content.products as string[])?.includes(product.id)
         );
         const now = new Date();
         const startTime = new Date(block.content.startTime);
