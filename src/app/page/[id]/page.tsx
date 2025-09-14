@@ -126,3 +126,6 @@ export default async function FrontendPage({
 
 // 設定重新驗證時間 (ISR - Incremental Static Regeneration)
 export const revalidate = 3600; // 每小時重新生成一次
+
+// 添加重新驗證標籤
+export const tags = ["marketing-pages"];

@@ -82,6 +82,19 @@ export default function MarketingEditPage() {
       };
 
       await mockUpdateMarketingPageApi(params.id as string, updateData);
+
+      // 如果頁面狀態是已發布，觸發 SSG 重新驗證
+      if (updateData.status === "published") {
+        try {
+          await fetch(`/api/revalidate?path=/page/${params.id}`, {
+            method: "POST",
+          });
+          console.log("SSG 頁面已重新驗證");
+        } catch (error) {
+          console.error("SSG 重新驗證失敗:", error);
+        }
+      }
+
       alert("儲存成功！");
       router.push("/marketing");
     } catch (error) {
@@ -335,9 +348,107 @@ export default function MarketingEditPage() {
             />
           </div>
 
-          {/* 右側：即時預覽 */}
+          {/* 右側：預覽區域 */}
           <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">即時預覽</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-gray-900">預覽</h3>
+              <div className="flex items-center space-x-2">
+                {/* 除錯：顯示當前狀態 */}
+                <span className="text-xs text-gray-400 mr-2">
+                  狀態: {formData.status}
+                </span>
+                {(formData.status === "published" ||
+                  page?.status === "published") && (
+                  <a
+                    href={`/page/${page?.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-3 py-1.5 border border-green-300 text-xs font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 transition-colors"
+                  >
+                    <svg
+                      className="w-3 h-3 mr-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    查看 SSG 頁面
+                  </a>
+                )}
+                <button
+                  onClick={async () => {
+                    const isPublished =
+                      formData.status === "published" ||
+                      page?.status === "published";
+                    if (isPublished) {
+                      try {
+                        // 觸發 SSG 頁面重新驗證
+                        await fetch(`/api/revalidate?path=/page/${page?.id}`, {
+                          method: "POST",
+                        });
+                        alert("SSG 頁面已更新！");
+                      } catch (error) {
+                        console.error("重新驗證失敗:", error);
+                        alert("重新驗證失敗，請稍後再試");
+                      }
+                    }
+                  }}
+                  disabled={
+                    !(
+                      formData.status === "published" ||
+                      page?.status === "published"
+                    )
+                  }
+                  className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    formData.status === "published" ||
+                    page?.status === "published"
+                      ? "border border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-100"
+                      : "border border-gray-300 text-gray-400 bg-gray-50 cursor-not-allowed"
+                  }`}
+                >
+                  <svg
+                    className="w-3 h-3 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  更新 SSG
+                </button>
+              </div>
+            </div>
+
+            {/* 狀態提示 */}
+            <div className="mb-4 p-3 rounded-md bg-gray-50 border border-gray-200">
+              <div className="flex items-center">
+                <div
+                  className={`w-2 h-2 rounded-full mr-2 ${
+                    formData.status === "published"
+                      ? "bg-green-500"
+                      : formData.status === "draft"
+                      ? "bg-yellow-500"
+                      : "bg-gray-500"
+                  }`}
+                ></div>
+                <span className="text-sm text-gray-700">
+                  {formData.status === "published" &&
+                    "已發布 - 可生成 SSG 頁面"}
+                  {formData.status === "draft" &&
+                    "草稿狀態 - 需發布後才能生成 SSG"}
+                  {formData.status === "archived" &&
+                    "已封存 - 不會生成 SSG 頁面"}
+                </span>
+              </div>
+            </div>
+
             <PagePreview
               blocks={blocks}
               title={formData.title}

@@ -117,8 +117,8 @@ export default function MarketingPreviewPage() {
           (block.content.products as string[])?.includes(product.id)
         );
         const now = new Date();
-        const startTime = new Date(block.content.startTime);
-        const endTime = new Date(block.content.endTime);
+        const startTime = new Date(block.content.startTime as string);
+        const endTime = new Date(block.content.endTime as string);
         const isActive = now >= startTime && now <= endTime;
 
         return (
