@@ -1,4 +1,4 @@
-import { MarketingPage, MarketingBlock, PaginatedResponse } from "@/types";
+import { MarketingPage, PaginatedResponse } from "@/types";
 
 // 生成隨機行銷頁面資料 (與原版相同，但針對伺服器端優化)
 export const generateMockMarketingPages = (): MarketingPage[] => {
